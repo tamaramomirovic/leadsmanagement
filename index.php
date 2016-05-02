@@ -51,7 +51,7 @@ include 'config.php';
 //1. Query for Both:  
 if((!empty($_GET["assignee"])) &&(!empty($_GET["status"])) )
 {
-	$assignee = $_GET["assignee"];
+        $assignee = $_GET["assignee"];
 	$status = $_GET["status"];
 	$stmt = $PDO->prepare('select 
 	field_value as Assignee, 
@@ -63,7 +63,7 @@ if((!empty($_GET["assignee"])) &&(!empty($_GET["status"])) )
 	on l.id  = lc.lead_id
 	where field_value like ?
 	and status_label like ?
-	group by  status_label');
+	group by  field_value, status_label');
 	$params = array("%$assignee%", "%$status%");
 	$stmt->execute($params);
 }
@@ -93,7 +93,7 @@ else if(!empty($_GET["status"]))
 	inner join leadsmanagement.lead_custom lc
 	on l.id  = lc.lead_id
 	where status_label = :status
-	group by  status_label');
+	group by  field_value, status_label');
 	$stmt->bindValue('status', $status);
 	$stmt->execute();
 }
@@ -106,7 +106,7 @@ else
 	count(status_label) as Count from leadsmanagement.leads l
 	inner join leadsmanagement.lead_custom lc
 	on l.id  = lc.lead_id
-	group by  status_label');
+	group by  field_value, status_label');
 	$stmt->execute();
 	
 }
